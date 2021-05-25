@@ -1,0 +1,23 @@
+<template>
+  <div class="split-screen">
+    <slot></slot>
+  </div>
+</template>
+
+<style scoped lang="scss">
+/* Smartphone and Small Tablet */
+@media only screen and (max-width: 700px) {
+  .split-screen {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+/* Large Tablet and Desktop */
+@media only screen and (min-width: 701px) {
+  .split-screen {
+    height: 100%;
+    display: flex;
+  }
+}
+</style>
