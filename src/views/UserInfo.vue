@@ -1,24 +1,26 @@
 <template>
   <div class="user-info" dir="ltr">
     <h1>User Info</h1>
-    <dl>
-      <dt>Email:</dt>
-      <dd>{{ loginData.email }}</dd>
-      <dt>First Name:</dt>
-      <dd>{{ loginData.firstName }}</dd>
-      <dt>Last Name:</dt>
-      <dd>{{ loginData.lastName }}</dd>
-      <dt>Phone:</dt>
-      <dd>{{ loginData.phone }}</dd>
-    </dl>
-    <dl v-for="business in loginData.businesses" :key="business.nameEn">
-      <dt>Buissness Name:</dt>
-      <dd>{{ business.name }}</dd>
-      <dt>Address:</dt>
-      <dd>{{ business.address }}</dd>
-      <dt>City:</dt>
-      <dd>{{ business.city }}</dd>
-    </dl>
+    <span>
+      <dl>
+        <dt>Email:</dt>
+        <dd>{{ loginData.email }}</dd>
+        <dt>First Name:</dt>
+        <dd>{{ loginData.firstName }}</dd>
+        <dt>Last Name:</dt>
+        <dd>{{ loginData.lastName }}</dd>
+        <dt>Phone:</dt>
+        <dd>{{ loginData.phone }}</dd>
+      </dl>
+      <dl v-for="business in loginData.businesses" :key="business.nameEn">
+        <dt>Buissness Name:</dt>
+        <dd>{{ business.name }}</dd>
+        <dt>Address:</dt>
+        <dd>{{ business.address }}</dd>
+        <dt>City:</dt>
+        <dd>{{ business.city }}</dd>
+      </dl>
+    </span>
     <PrimaryButton :click="logout">Logout</PrimaryButton>
   </div>
 </template>
@@ -34,16 +36,14 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch("logout").then(() => this.$router.push("/"));
+      this.$store.dispatch("logout");
+      this.$router.push("/");
     },
   },
   computed: {
     ...mapGetters(["isAuthenticated"]),
     loginData() {
       return this.$store.state.loginData;
-    },
-    hasLoginData() {
-      return !!this.$store.state.loginData;
     },
   },
 };

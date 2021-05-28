@@ -1,6 +1,6 @@
 <template>
   <div class="welcome" dir="ltr">
-    <h1>Hello {{loginData.firstName}}, welcome to your {{loginData.businesses[0].name}}.</h1>
+    <h1>Hello {{loginData.firstName}}, {{welcomeToYourBuissnessMessage}}.</h1>
     <PrimaryButton :click="logout">Logout</PrimaryButton>
   </div>
 </template>
@@ -16,7 +16,8 @@ export default {
   },
   methods: {
     logout () {
-      this.$store.dispatch("logout").then(() => this.$router.push("/"));
+      this.$store.dispatch("logout");
+      this.$router.push("/");
     },
   },
   computed: {
@@ -24,8 +25,12 @@ export default {
     loginData() {
       return this.$store.state.loginData;
     },
-    hasLoginData() {
-      return !!this.$store.state.loginData;
+    welcomeToYourBuissnessMessage() {
+      const businesses = this.$store.state.loginData.businesses;
+      if (Array.isArray(businesses) && businesses.length > 0) {
+        return `welcome to your ${businesses[0].name}`;
+      }
+      return 'You have not set up your buissness yet.';
     }
   }
 };
