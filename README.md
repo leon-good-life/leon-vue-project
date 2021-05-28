@@ -1,4 +1,4 @@
-# interview
+# Vue project
 
 ## Project setup
 ```
