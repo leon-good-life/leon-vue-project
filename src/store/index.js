@@ -29,13 +29,26 @@ export default new Vuex.Store({
   actions: {
     login({ commit }, { email, password }) {
       commit('setLoginLoadingTrue');
+      commit('setLoginError', null);
       try {
         fetch(`${API_URL}/account/login`, {
           method: "POST",
           body: JSON.stringify({ email, password }),
         })
-          .then((response) => response.json())
-          .then((response) => commit('setLoginData', response))
+          .then((response) => {
+            return response.json();
+          })
+          .then((response) => {
+            // In `fetch` both success 2xx and error 4xx, 5xx responses goes into "then"
+            // Axios library can be used for a better code next time.
+            if (response.errorMessage) {
+              commit('setLoginError', response.errorMessage);
+            } else if (response.errorCode) {
+              commit('setLoginError', response.errorMessage);
+            } else {
+              commit('setLoginData', response);
+            }
+          })
           .catch((error) => commit('setLoginError', error));
       } catch (exceptionErr) {
         commit('setLoginError', exceptionErr);

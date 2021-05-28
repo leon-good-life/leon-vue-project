@@ -43,6 +43,7 @@ body {
   --action: #18c746;
   --light: #ffffff;
   --lightBackground: lightgray;
+  --error: red;
 }
 
 /* Other styles */

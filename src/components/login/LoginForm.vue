@@ -18,13 +18,13 @@
       name="password"
       id="password"
     />
-    <a href="#" class="forgot-password">שכחת סיסמה?</a>
+    <a href="#" class="forgot-password" v-on:click="noNeedToImplement">שכחת סיסמה?</a>
     <PrimaryButton type="submit" class="submit-button" v-bind:loading="isLoading">כניסה</PrimaryButton>
-    <span v-if="loginError">שגיאה: {{loginError}}</span>
-    <span class="join">
+    <div class="error" v-if="loginError">שגיאה: {{loginError}}</div>
+    <div class="join">
       עוד לא הצטרפת?
-      <a href="#">ל-30 יום ניסיון חינם</a>
-    </span>
+      <a href="#" v-on:click="noNeedToImplement">ל-30 יום ניסיון חינם</a>
+    </div>
   </form>
 </template>
 
@@ -43,12 +43,12 @@ export default {
     };
   },
   mounted() {
-    if (this.hasLoginData) {
+    if (this.shouldRedirect) {
       this.$router.push('/welcome');
     }
   },
   updated() {
-    if (this.hasLoginData) {
+    if (this.shouldRedirect) {
       this.$router.push('/welcome');
     }
   },
@@ -57,13 +57,17 @@ export default {
       const { email, password } = this;
       this.$store.dispatch("login", { email, password });
     },
+    noNeedToImplement() {
+      alert('לא צריך לממש לפי ההוראות');
+    }
   },
   computed: {
     isLoading() {
       return this.$store.state.loginLoading;
     },
-    hasLoginData() {
-      return !!this.$store.state.loginData;
+    shouldRedirect() {
+      console.log(this.$store.state.loginData);
+      return this.$store.state.loginData && !this.$store.state.loginError;
     },
     loginError() {
       return this.$store.state.loginError;
@@ -105,9 +109,12 @@ export default {
   .submit-button {
     margin-top: 67px;
   }
+  .error {
+    color: var(--error);
+    padding-top: 15px;
+  }
   .join {
     color: var(--secondary);
-    display: block;
     padding: 40px 0;
     font-size: 18px;
   }
