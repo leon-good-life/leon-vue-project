@@ -1,6 +1,6 @@
 <template>
   <div class="illustration-container">
-    <img src="../assets/login-illustration.svg" alt="איור שבו אשה משקה עציץ" />
+    <img src="@/assets/login-illustration.svg" alt="איור שבו אשה משקה עציץ" />
   </div>
 </template>
 

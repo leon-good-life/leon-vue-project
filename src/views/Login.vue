@@ -6,7 +6,7 @@
     </SplitScreenPane>
 
     <SplitScreenPane>
-      <Illustration />
+      <LoginIllustration />
     </SplitScreenPane>
 
   </SplitScreen>
@@ -15,15 +15,15 @@
 <script>
 import SplitScreen from "@/components/SplitScreen.vue";
 import SplitScreenPane from "@/components/SplitScreenPane.vue";
-import Illustration from "@/components/Illustration.vue";
-import LogoAndLoginForm from "@/components/LogoAndLoginForm.vue";
+import LoginIllustration from "@/components/login/LoginIllustration.vue";
+import LogoAndLoginForm from "@/components/login/LogoAndLoginForm.vue";
 
 export default {
   name: "Login",
   components: {
     SplitScreen,
     SplitScreenPane,
-    Illustration,
+    LoginIllustration,
     LogoAndLoginForm,
   },
 };

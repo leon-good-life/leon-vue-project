@@ -1,7 +1,7 @@
 <template>
   <div class="logo-and-login">
     <div class="logo-container">
-      <img src="../assets/logo.svg" class="logo" alt="חשבונית ירוקה" />
+      <img src="@/assets/logo.svg" class="logo" alt="חשבונית ירוקה" />
     </div>
     <div class="login-form-container">
       <LoginForm />
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import LoginForm from "@/components/LoginForm.vue";
+import LoginForm from "@/components/login/LoginForm.vue";
 
 export default {
   name: "LogoAndLoginForm",
