@@ -18,9 +18,16 @@
       name="password"
       id="password"
     />
-    <a href="#" class="forgot-password" v-on:click="noNeedToImplement">שכחת סיסמה?</a>
-    <PrimaryButton type="submit" class="submit-button" v-bind:loading="isLoading">כניסה</PrimaryButton>
-    <div class="error" v-if="loginError">שגיאה: {{loginError}}</div>
+    <a href="#" class="forgot-password" v-on:click="noNeedToImplement"
+      >שכחת סיסמה?</a
+    >
+    <PrimaryButton
+      type="submit"
+      class="submit-button"
+      v-bind:loading="isLoading"
+      >כניסה</PrimaryButton
+    >
+    <div class="error" v-if="loginError">שגיאה: {{ loginError }}</div>
     <div class="join">
       עוד לא הצטרפת?
       <a href="#" v-on:click="noNeedToImplement">ל-30 יום ניסיון חינם</a>
@@ -29,7 +36,8 @@
 </template>
 
 <script>
-import PrimaryButton from '@/components/PrimaryButton.vue';
+import { mapGetters } from "vuex";
+import PrimaryButton from "@/components/PrimaryButton.vue";
 
 export default {
   name: "LoginForm",
@@ -42,36 +50,27 @@ export default {
       password: "",
     };
   },
-  mounted() {
-    if (this.shouldRedirect) {
-      this.$router.push('/welcome');
-    }
-  },
-  updated() {
-    if (this.shouldRedirect) {
-      this.$router.push('/welcome');
-    }
-  },
   methods: {
-    submitLogin () {
+    submitLogin() {
       const { email, password } = this;
-      this.$store.dispatch("login", { email, password });
+      this.$store.dispatch("login", { email, password }).then(() => {
+        if (this.isAuthenticated) {
+          this.$router.push('/welcome');
+        }
+      });
     },
     noNeedToImplement() {
-      alert('לא צריך לממש לפי ההוראות');
-    }
+      alert("לא צריך לממש לפי ההוראות");
+    },
   },
   computed: {
+    ...mapGetters(["isAuthenticated"]),
     isLoading() {
       return this.$store.state.loginLoading;
     },
-    shouldRedirect() {
-      console.log(this.$store.state.loginData);
-      return this.$store.state.loginData && !this.$store.state.loginError;
-    },
     loginError() {
       return this.$store.state.loginError;
-    }
+    },
   }
 };
 </script>

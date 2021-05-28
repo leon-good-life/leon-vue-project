@@ -15,22 +15,24 @@ export default new Vuex.Store({
   mutations: {
     setLoginData(state, loginData) {
       state.loginData = loginData;
-      state.loginLoading = false;
-      localStorage.setItem('loginData', JSON.stringify(loginData));
+      if (!loginData) {
+        localStorage.removeItem('loginData');
+      } else {
+        localStorage.setItem('loginData', JSON.stringify(loginData));
+      }
     },
     setLoginError(state, loginError) {
       state.loginError = loginError;
-      state.loginLoading = false;
     },
-    setLoginLoadingTrue(state) {
-      state.loginLoading = true;
+    setLoginLoading(state, loginLoading) {
+      state.loginLoading = loginLoading;
     }
   },
   actions: {
     login({ commit }, { email, password }) {
-      commit('setLoginLoadingTrue');
+      commit('setLoginLoading', true);
       commit('setLoginError', null);
-      try {
+      return new Promise((resolve, reject) => {
         fetch(`${API_URL}/account/login`, {
           method: "POST",
           body: JSON.stringify({ email, password }),
@@ -41,31 +43,48 @@ export default new Vuex.Store({
           .then((response) => {
             // In `fetch` both success 2xx and error 4xx, 5xx responses goes into "then"
             // Axios library can be used for a better code next time.
+            commit('setLoginLoading', false);
             if (response.errorMessage) {
               commit('setLoginError', response.errorMessage);
+              reject();
             } else if (response.errorCode) {
               commit('setLoginError', response.errorMessage);
+              reject();
             } else {
               commit('setLoginData', response);
+              resolve();
             }
           })
-          .catch((error) => commit('setLoginError', error));
-      } catch (exceptionErr) {
-        commit('setLoginError', exceptionErr);
-      }
+          .catch((error) => {
+            commit('setLoginLoading', false);
+            commit('setLoginError', error);
+            reject();
+          });
+      });
     },
     logout({ commit }) {
       commit('setLoginData', null);
-      try {
+      return new Promise((resolve, reject) => {
         fetch(`${API_URL}/account/logout`, {
           method: "POST"
         })
-          .catch((error) => console.error('On Logout', error));
-      } catch (exceptionErr) {
-        console.error('On Logout', exceptionErr);
-      }
+          .then(response => {
+            if (response.ok) {
+              resolve();
+            } else {
+              reject();
+            }
+          })
+          .catch((error) => {
+            console.error('On Logout', error);
+            reject();
+          });
+      });
     }
   },
-  modules: {
+  getters: {
+    isAuthenticated: state => {
+      return !!state.loginData && !state.loginError;
+    }
   }
 })

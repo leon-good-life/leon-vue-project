@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import PrimaryButton from "@/components/PrimaryButton.vue";
 
 export default {
@@ -31,23 +32,13 @@ export default {
   components: {
     PrimaryButton,
   },
-  mounted() {
-    if (!this.hasLoginData) {
-      this.$router.push("/");
-    }
-  },
-  updated() {
-    if (!this.hasLoginData) {
-      this.$router.push("/");
-    }
-  },
   methods: {
     logout() {
-      this.$store.dispatch("logout");
-      this.$router.push("/");
+      this.$store.dispatch("logout").then(() => this.$router.push("/"));
     },
   },
   computed: {
+    ...mapGetters(["isAuthenticated"]),
     loginData() {
       return this.$store.state.loginData;
     },
