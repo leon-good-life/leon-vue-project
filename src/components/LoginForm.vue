@@ -1,13 +1,26 @@
 <template>
-  <form class="login-form">
+  <form class="login-form" v-on:submit.prevent="submitLogin">
     <h1 class="heading">היי, טוב לראות אותך</h1>
-    <input type="email" placeholder="מייל" name="email" id="email" />
+    <input
+      v-model="email"
+      type="email"
+      placeholder="מייל"
+      name="email"
+      id="email"
+    />
     <label for="email" class="email-label"
       >כתובת המייל איתה נרשמת לחשבונית ירוקה</label
     >
-    <input type="password" placeholder="סיסמא" />
+    <input
+      v-model="password"
+      type="password"
+      placeholder="סיסמא"
+      name="password"
+      id="password"
+    />
     <a href="#" class="forgot-password">שכחת סיסמה?</a>
-    <button type="submit" class="submit-button">כניסה</button>
+    <PrimaryButton type="submit" class="submit-button" v-bind:loading="isLoading">כניסה</PrimaryButton>
+    <span v-if="loginError">שגיאה: {{loginError}}</span>
     <span class="join">
       עוד לא הצטרפת?
       <a href="#">ל-30 יום ניסיון חינם</a>
@@ -16,26 +29,56 @@
 </template>
 
 <script>
+import PrimaryButton from './PrimaryButton.vue';
+
 export default {
   name: "LoginForm",
-  props: {
-    msg: String,
+  components: {
+    PrimaryButton,
   },
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  mounted() {
+    if (this.hasLoginData) {
+      this.$router.push('/welcome');
+    }
+  },
+  updated() {
+    if (this.hasLoginData) {
+      this.$router.push('/welcome');
+    }
+  },
+  methods: {
+    submitLogin () {
+      const { email, password } = this;
+      this.$store.dispatch("login", { email, password });
+    },
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.loginLoading;
+    },
+    hasLoginData() {
+      return !!this.$store.state.loginData;
+    },
+    loginError() {
+      return this.$store.state.loginError;
+    }
+  }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-$dark-blue: #23445a;
-$light-blue: #0084f4;
-$green: #18c746;
-
 .login-form {
   margin: 0 auto;
 
   .heading {
     font-size: 56px;
-    color: $dark-blue;
+    color: var(--primary);
     line-height: 48px;
     letter-spacing: 0;
   }
@@ -49,37 +92,27 @@ $green: #18c746;
     margin-top: 65px;
   }
   input::placeholder {
-    color: $dark-blue;
+    color: var(--primary);
   }
   .email-label {
-    color: $dark-blue;
+    color: var(--primary);
     font-size: 14px;
   }
   .forgot-password {
-    color: $dark-blue;
+    color: var(--primary);
     display: block;
   }
   .submit-button {
-    height: 56px;
-    width: 228px;
-    display: block;
-    background-color: $green;
-    border-radius: 100px;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
     margin-top: 67px;
   }
   .join {
-    color: $light-blue;
+    color: var(--secondary);
     display: block;
     padding: 40px 0;
     font-size: 18px;
   }
   .join > a {
-    color: $light-blue;
+    color: var(--secondary);
   }
 }
 </style>
