@@ -8,7 +8,7 @@ const API_URL = 'api/v1'; // proxy is implemented on dev server to avoid CORS er
 
 export default new Vuex.Store({
   state: {
-    loginData: null,
+    loginData: JSON.parse(localStorage.getItem('loginData')),
     loginError: null,
     loginLoading: false
   },
@@ -16,6 +16,7 @@ export default new Vuex.Store({
     setLoginData(state, loginData) {
       state.loginData = loginData;
       state.loginLoading = false;
+      localStorage.setItem('loginData', JSON.stringify(loginData));
     },
     setLoginError(state, loginError) {
       state.loginError = loginError;
